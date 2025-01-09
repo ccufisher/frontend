@@ -24,7 +24,8 @@ class _CrewCalendarState extends State<CrewCalendar> {
 
   Future<void> _loadMonthlyData() async {
     try {
-      final data = await _getMonthlyCalendar(widget.workerId, selectedYear, selectedMonth);
+      final data = await _getMonthlyCalendar(
+          widget.workerId, selectedYear, selectedMonth);
       setState(() {
         monthlyData = data;
       });
@@ -35,8 +36,10 @@ class _CrewCalendarState extends State<CrewCalendar> {
     }
   }
 
-  Future<List<Map<String, dynamic>>> _getMonthlyCalendar(int workerId, int year, int month) async {
-    final url = 'http://35.229.208.250:3000/api/workerPage/calendar/$workerId/$year/$month';
+  Future<List<Map<String, dynamic>>> _getMonthlyCalendar(
+      int workerId, int year, int month) async {
+    final url =
+        'http://35.229.208.250:3000/api/workerPage/calendar/$workerId/$year/$month';
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -67,7 +70,8 @@ class _CrewCalendarState extends State<CrewCalendar> {
     }
   }
 
-  Future<void> _reportAbnormality(int workerId, String date, String issueDescription) async {
+  Future<void> _reportAbnormality(
+      int workerId, String date, String issueDescription) async {
     final response = await http.post(
       Uri.parse('http://35.229.208.250:3000/api/workerPage/newReport'),
       headers: {'Content-Type': 'application/json'},
@@ -145,9 +149,9 @@ class _CrewCalendarState extends State<CrewCalendar> {
         // Weekday header
         Container(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
+            children: [
               Text('Mon', style: TextStyle(fontWeight: FontWeight.bold)),
               Text('Tue', style: TextStyle(fontWeight: FontWeight.bold)),
               Text('Wed', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -177,7 +181,8 @@ class _CrewCalendarState extends State<CrewCalendar> {
         double cellMargin = 1.0;
         double cellWidth = (gridWidth - cellMargin * 2 * 7) / 7;
         int numberOfRows = (totalCells / 7).ceil();
-        double cellHeight = (gridHeight - cellMargin * 2 * numberOfRows) / numberOfRows;
+        double cellHeight =
+            (gridHeight - cellMargin * 2 * numberOfRows) / numberOfRows;
 
         return GridView.builder(
           padding: EdgeInsets.zero,
@@ -195,9 +200,12 @@ class _CrewCalendarState extends State<CrewCalendar> {
               return Container(margin: EdgeInsets.all(cellMargin));
             } else {
               final dateStr = _formatDate(selectedYear, selectedMonth, dayNum);
-              final dayData = monthlyData.firstWhere((d) => d['date'] == dateStr, orElse: () => {});
+              final dayData = monthlyData
+                  .firstWhere((d) => d['date'] == dateStr, orElse: () => {});
               String info = '';
-              if (dayData.isNotEmpty && dayData['hours'] != null && dayData['hours'] > 0) {
+              if (dayData.isNotEmpty &&
+                  dayData['hours'] != null &&
+                  dayData['hours'] > 0) {
                 info = '${dayData['hours']}h';
               }
               return GestureDetector(
@@ -211,7 +219,8 @@ class _CrewCalendarState extends State<CrewCalendar> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('$dayNum'),
-                      if (info.isNotEmpty) Text(info, style: const TextStyle(fontSize: 12))
+                      if (info.isNotEmpty)
+                        Text(info, style: const TextStyle(fontSize: 12))
                     ],
                   ),
                 ),
@@ -281,7 +290,7 @@ class _CrewCalendarState extends State<CrewCalendar> {
                         tempMonth = index + 1;
                       },
                       children: List<Widget>.generate(12, (int index) {
-                        return Center(child: Text('${_getMonthName(index + 1)}'));
+                        return Center(child: Text(_getMonthName(index + 1)));
                       }),
                     ),
                   ),
@@ -296,10 +305,12 @@ class _CrewCalendarState extends State<CrewCalendar> {
 
   void _showDayDetail(BuildContext context, int day) {
     final dateStr = _formatDate(selectedYear, selectedMonth, day);
-    final dayData = monthlyData.firstWhere((d) => d['date'] == dateStr, orElse: () => {});
-    final hoursInfo = (dayData.isNotEmpty && dayData['hours'] != null && dayData['hours'] > 0)
-        ? '${dayData['hours']} hours'
-        : 'No data available';
+    final dayData =
+        monthlyData.firstWhere((d) => d['date'] == dateStr, orElse: () => {});
+    final hoursInfo =
+        (dayData.isNotEmpty && dayData['hours'] != null && dayData['hours'] > 0)
+            ? '${dayData['hours']} hours'
+            : 'No data available';
 
     showCupertinoDialog(
       context: context,
@@ -322,14 +333,16 @@ class _CrewCalendarState extends State<CrewCalendar> {
               child: const Text('Report Hours Error'),
               onPressed: () async {
                 Navigator.pop(context);
-                final issueDescription = 'Incorrect hours recorded.';
+                const issueDescription = 'Incorrect hours recorded.';
                 try {
-                  await _reportAbnormality(widget.workerId, dateStr, issueDescription);
+                  await _reportAbnormality(
+                      widget.workerId, dateStr, issueDescription);
                   showCupertinoDialog(
                     context: context,
                     builder: (context) => CupertinoAlertDialog(
                       title: const Text('Report Success'),
-                      content: const Text('The hours error was successfully reported.'),
+                      content: const Text(
+                          'The hours error was successfully reported.'),
                       actions: [
                         CupertinoDialogAction(
                           child: const Text('OK'),
@@ -393,8 +406,18 @@ class _CrewCalendarState extends State<CrewCalendar> {
 
   String _getMonthName(int month) {
     const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December',
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
     return months[month - 1];
   }

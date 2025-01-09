@@ -32,7 +32,7 @@ class _CrewInfoState extends State<CrewInfo> {
         });
       }
     } catch (e) {
-      print('Error: $e');
+      debugPrint('Error: $e');
       setState(() {
         _workerInfo = {};
       });
@@ -40,13 +40,14 @@ class _CrewInfoState extends State<CrewInfo> {
   }
 
   Future<Map<String, dynamic>> _getWorkerInfo(int workerId) async {
-    final url = Uri.parse('http://35.229.208.250:3000/api/workerEdit/$workerId');
+    final url =
+        Uri.parse('http://35.229.208.250:3000/api/workerEdit/$workerId');
 
-    print('Request URL: $url');
+    debugPrint('Request URL: $url');
     final response = await http.get(url);
 
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    debugPrint('Response status: ${response.statusCode}');
+    debugPrint('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
